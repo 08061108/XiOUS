@@ -1,0 +1,26 @@
+#构建脚本能够清晰地定义项目的结构和构建需求，使得自动化构建过程更加高效和可管理(例如构建applications组)
+
+# --JR from building import *--从 building 模块中导入所有内容(使用通配符 *)  
+import rtconfig
+from building import *
+
+# --JR 调用 GetCurrentDir() 函数获取当前工作目录的路径，并将其赋值给变量 cwd 
+cwd     = GetCurrentDir()
+
+# --JR 定义一个列表 CPPPATH，其中包含当前工作目录 cwd
+CPPPATH = [cwd]
+
+# --JR 使用 Split 函数将多行字符串中的源文件名分割成一个列表  
+src     = Split("""
+main.c
+""")
+
+""" --JR
+调用 DefineGroup 函数创建一个名为 'Applications' 的构建组
+  depend = ['']--指定该构建组的依赖关系。这里为空列表，表示没有依赖其他目标或组
+  CPPPATH = CPPPATH--传递之前定义的包含路径给构建组，确保编译时能够找到所需的头文件
+"""
+group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
+
+# --JR 使用 Return 函数将定义好的构建组 'group' 返回
+Return('group')
